@@ -1,8 +1,3 @@
- // WheelDrive - move a pair of DC motors at varying rate and direction
-//
-// Copyright (c) 2016, Garth Zeglin.  All rights reserved. Licensed under the
-// terms of the BSD 3-clause license as included in LICENSE.
-//
 // This program assumes that:
 //
 //  1. A DRV8833 DC motor driver module is connected to pins 5, 6.
@@ -90,7 +85,6 @@ void loop(void)
  
   int delayTime = 50; //milliseconds between each speed step
 
-
   set_motor_current(50);
   
   //Accelerates the motor
@@ -109,6 +103,4 @@ void loop(void)
   Serial.println("stop");
   set_motor_current(0);
 
-  // and repeat
 }
-/****************************************************************/
