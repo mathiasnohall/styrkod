@@ -5,16 +5,14 @@
 //  3. The serial console on the Arduino IDE is set to 9600 baud communications speed.
 
 // ================================================================================
-// Define constant values and global variables.
-
 // Define the pin numbers on which the outputs are generated.
 #define MOT_A1_PIN 5
 #define MOT_A2_PIN 6
 
 const int switchPin = 13; // the number of the switch pin
-int switchState = 0;  // variable for reading the switch's status
+int switchState = 0;      // variable for reading the switch's status
 
-const int maxSpeed = 200;
+const int maxSpeed = 200; // maxspeed of the motor
 
 // ================================================================================
 /// Configure the hardware once after booting up.  This runs once after pressing
@@ -42,23 +40,24 @@ void setup(void)
 /// \param pwm    PWM duty cycle ranging from -255 full reverse to 255 full forward
 /// \param IN1_PIN  pin number xIN1 for the given channel
 /// \param IN2_PIN  pin number xIN2 for the given channel
-
 void set_motor_pwm(int pwm, int IN1_PIN, int IN2_PIN)
 {
-  if (pwm < 0) {  // reverse speeds
+  if (pwm < 0)
+  { // reverse speeds
     analogWrite(IN1_PIN, -pwm);
     digitalWrite(IN2_PIN, LOW);
-
-  } else { // stop or forward
+  }
+  else
+  { // stop or forward
     digitalWrite(IN1_PIN, LOW);
     analogWrite(IN2_PIN, pwm);
   }
 }
+
 // ================================================================================
 /// Set the current on both motors.
 ///
-/// \param pwm_A  motor A PWM, -255 to 255
-
+/// \param pwm motor  PWM, -255 to 255
 void set_motor_current(int pwm)
 {
   set_motor_pwm(pwm, MOT_A1_PIN, MOT_A2_PIN);
@@ -68,39 +67,88 @@ void set_motor_current(int pwm)
   Serial.print(pwm);
 }
 
+bool offButtonPressed()
+{
+  switchState = digitalRead(switchPin); // read the state of the switch value:
+  if (switchState == LOW)
+  {
+    Serial.println("turn off");
+    digitalWrite(MOT_A1_PIN, LOW);
+    digitalWrite(MOT_A2_PIN, LOW);
+    return true;
+  }
+}
+
+bool run(int seconds)
+{
+  for (int i = 0; i < seconds; i++)
+  {
+    if (offButtonPressed())
+    {
+      return false; // do not run any more
+    }
+    delay(1000);
+  }
+}
 
 // ================================================================================
 /// Run one iteration of the main event loop.  The Arduino system will call this
 /// function over and over forever.
 void loop(void)
 {
-   Serial.println("Start");
-   switchState = digitalRead(switchPin); // read the state of the switch value:
-   if(switchState == LOW){    
-    Serial.println("stäng av med knapp");    
-    digitalWrite(MOT_A1_PIN, LOW);
-    digitalWrite(MOT_A2_PIN, LOW);
+  Serial.println("Start");
+  if (offButtonPressed())
+  {
     return;
-   }
- 
-  int delayTime = 50; //milliseconds between each speed step
+  }
 
-  set_motor_current(50);
-  
-  //Accelerates the motor
-  Serial.println("Starta acceleration");
-  for(int i = 50; i < maxSpeed + 1; i++){
+  set_motor_current(100); // start motor at 100 pwm
+
+  //Accelerate the motor
+  int delayTime = 25; //milliseconds between each speed step
+  Serial.println("Start acceleration");
+  for (int i = 101; i < maxSpeed + 1; i++)
+  {
     set_motor_current(i);
-    delay(50);
+    delay(delayTime);
   }
 
   // Full speed forward.
-  Serial.println("max speed");
-  set_motor_current(maxSpeed);
+  Serial.println("run at max speed for 7 seconds/meters");
+  if (!run(7))
+  {
+    return;
+  }
+  // Stop.
+  Serial.println("stop for 5 seconds");
+  set_motor_current(0);
   delay(5000);
+  if (offButtonPressed())
+  {
+    return;
+  }
+
+  // run in reverse
+  set_motor_current(-100); // start motor at 100 pwm
+
+  //Accelerate the motor
+  int delayTime = 25; //milliseconds between each speed step
+  Serial.println("Start acceleration");
+  for (int i = 101; i < maxSpeed + 1; i++)
+  {
+    set_motor_current(-i);
+    delay(delayTime);
+  }
+
+  // Full speed forward.
+  Serial.println("run at max speed for 7 seconds/meters");
+  if (!run(7))
+  {
+    return;
+  }
   
   // Stop.
-  Serial.println("stop");
+  Serial.println("stop for 5 seconds");
   set_motor_current(0);
-
+  delay(5000);
 }
