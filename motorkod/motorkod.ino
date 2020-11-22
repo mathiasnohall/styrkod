@@ -132,7 +132,6 @@ void loop(void)
   set_motor_current(-100); // start motor at 100 pwm
 
   //Accelerate the motor
-  int delayTime = 25; //milliseconds between each speed step
   Serial.println("Start acceleration");
   for (int i = 101; i < maxSpeed + 1; i++)
   {
