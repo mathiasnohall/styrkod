@@ -77,6 +77,7 @@ bool offButtonPressed()
     digitalWrite(MOT_A2_PIN, LOW);
     return true;
   }
+  return false;
 }
 
 bool run(int seconds)
@@ -87,8 +88,9 @@ bool run(int seconds)
     {
       return false; // do not run any more
     }
-    delay(1000);
+    delay(1000);    
   }
+  return true;
 }
 
 // ================================================================================
