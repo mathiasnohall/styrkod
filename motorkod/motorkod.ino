@@ -12,8 +12,8 @@
 const int switchPin = 13; // the number of the switch pin
 int switchState = 0;      // variable for reading the switch's status
 
-const int startSpeed = 180; // startsoeed of the motor
-const int maxSpeed = 200; // maxspeed of the motor
+const int startSpeed = 180; // startspeed of the motor
+const int maxSpeed = 255; // maxspeed of the motor
 
 // ================================================================================
 /// Configure the hardware once after booting up.  This runs once after pressing
