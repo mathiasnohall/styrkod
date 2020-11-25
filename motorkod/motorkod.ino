@@ -12,6 +12,7 @@
 const int switchPin = 13; // the number of the switch pin
 int switchState = 0;      // variable for reading the switch's status
 
+const int startSpeed = 180; // startsoeed of the motor
 const int maxSpeed = 200; // maxspeed of the motor
 
 // ================================================================================
@@ -104,12 +105,12 @@ void loop(void)
     return;
   }
 
-  set_motor_current(100); // start motor at 100 pwm
+  set_motor_current(startSpeed); // start motor at 100 pwm
 
   //Accelerate the motor
   int delayTime = 25; //milliseconds between each speed step
   Serial.println("Start acceleration");
-  for (int i = 101; i < maxSpeed + 1; i++)
+  for (int i = startSpeed + 1; i < maxSpeed + 1; i++)
   {
     set_motor_current(i);
     delay(delayTime);
@@ -131,11 +132,11 @@ void loop(void)
   }
 
   // run in reverse
-  set_motor_current(-100); // start motor at 100 pwm
+  set_motor_current(-startSpeed); // start motor at 100 pwm
 
   //Accelerate the motor
   Serial.println("Start acceleration");
-  for (int i = 101; i < maxSpeed + 1; i++)
+  for (int i = startSpeed + 1; i < maxSpeed + 1; i++)
   {
     set_motor_current(-i);
     delay(delayTime);
