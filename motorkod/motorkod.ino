@@ -14,6 +14,7 @@ int switchState = 0;      // variable for reading the switch's status
 
 const int startSpeed = 180; // startspeed of the motor
 const int maxSpeed = 255; // maxspeed of the motor
+const int runTime = 3; // time to run att max speed
 
 // ================================================================================
 /// Configure the hardware once after booting up.  This runs once after pressing
@@ -118,7 +119,7 @@ void loop(void)
 
   // Full speed forward.
   Serial.println("run at max speed for 7 seconds/meters");
-  if (!run(7))
+  if (!run(runTime))
   {
     return;
   }
@@ -144,7 +145,7 @@ void loop(void)
 
   // Full speed forward.
   Serial.println("run at max speed for 7 seconds/meters");
-  if (!run(7))
+  if (!run(runTime))
   {
     return;
   }
