@@ -14,7 +14,7 @@ int switchState = 0;      // variable for reading the switch's status
 
 const int startSpeed = 180; // startspeed of the motor
 const int maxSpeed = 255; // maxspeed of the motor
-const int runTime = 2; // time to run at max speed
+const int runTime = 1; // time to run at max speed
 
 const int stopTime = 5000; // wait 5000 ms between runs
 
@@ -128,10 +128,9 @@ void loop(void)
   }
 
   // Decelerate the motor and stop
-  for (int i = maxSpeed; i <= 0 ; i--)
+  for (int i = maxSpeed; i <= 0; i--)
   {
     set_motor_current(i);
-    delay(delayTime);
   }
   Serial.println("stop for stopTime seconds");
   delay(stopTime);
@@ -162,7 +161,6 @@ void loop(void)
   for (int i = -maxSpeed; i >= 0; i++)
   {
     set_motor_current(i);
-    delay(delayTime);
   }
 
   Serial.println("stop for stopTime seconds");
