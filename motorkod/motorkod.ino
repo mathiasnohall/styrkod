@@ -14,7 +14,7 @@ int switchState = 0;      // variable for reading the switch's status
 
 const int startSpeed = 180; // startspeed of the motor
 const int maxSpeed = 255; // maxspeed of the motor
-const int runTime = 3; // time to run att max speed
+const int runTime = 2; // time to run att max speed
 
 // ================================================================================
 /// Configure the hardware once after booting up.  This runs once after pressing
@@ -137,9 +137,9 @@ void loop(void)
 
   //Accelerate the motor
   Serial.println("Start acceleration");
-  for (int i = startSpeed + 1; i < maxSpeed + 1; i++)
+  for (int i = -startSpeed - 1; i >= -maxSpeed; i--)
   {
-    set_motor_current(-i);
+    set_motor_current(i);
     delay(delayTime);
   }
 
