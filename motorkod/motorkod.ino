@@ -14,7 +14,9 @@ int switchState = 0;      // variable for reading the switch's status
 
 const int startSpeed = 180; // startspeed of the motor
 const int maxSpeed = 255; // maxspeed of the motor
-const int runTime = 2; // time to run att max speed
+const int runTime = 2; // time to run at max speed
+
+const int stopTime = 5000; // wait 5000 ms between runs
 
 // ================================================================================
 /// Configure the hardware once after booting up.  This runs once after pressing
@@ -106,34 +108,39 @@ void loop(void)
     return;
   }
 
-  set_motor_current(startSpeed); // start motor at 100 pwm
+  set_motor_current(startSpeed);
 
   //Accelerate the motor
-  int delayTime = 25; //milliseconds between each speed step
+  int delayTime = 10; //milliseconds between each speed step
   Serial.println("Start acceleration");
-  for (int i = startSpeed + 1; i < maxSpeed + 1; i++)
+  for (int i = startSpeed + 1; i <= maxSpeed; i++)
   {
     set_motor_current(i);
     delay(delayTime);
   }
 
   // Full speed forward.
-  Serial.println("run at max speed for 7 seconds/meters");
+  Serial.println("run at max speed for runTime seconds");
   if (!run(runTime))
   {
     return;
   }
-  // Stop.
-  Serial.println("stop for 5 seconds");
-  set_motor_current(0);
-  delay(5000);
+
+  // Decelerate the motor and stop
+  for (int i = maxSpeed; i <= 0 ; i--)
+  {
+    set_motor_current(i);
+    delay(delayTime);
+  }
+  Serial.println("stop for stopTime seconds");
+  delay(stopTime);
   if (offButtonPressed())
   {
     return;
   }
 
   // run in reverse
-  set_motor_current(-startSpeed); // start motor at 100 pwm
+  set_motor_current(-startSpeed);
 
   //Accelerate the motor
   Serial.println("Start acceleration");
@@ -143,15 +150,21 @@ void loop(void)
     delay(delayTime);
   }
 
-  // Full speed forward.
-  Serial.println("run at max speed for 7 seconds/meters");
+  // Full speed reverse.
+  Serial.println("run at max speed for runTime seconds");
   if (!run(runTime))
   {
     return;
   }
   
-  // Stop.
-  Serial.println("stop for 5 seconds");
+   // Decelerate the motor and stop
+  for (int i = -maxSpeed; i >= 0; i++)
+  {
+    set_motor_current(i);
+    delay(delayTime);
+  }
+
+  Serial.println("stop for stopTime seconds");
   set_motor_current(0);
-  delay(5000);
+  delay(stopTime);
 }
