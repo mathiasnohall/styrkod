@@ -18,6 +18,8 @@ const int runTime = 2; // time to run at max speed
 
 const int stopTime = 5000; // wait 5000 ms between runs
 
+const int delayTime = 10; // milliseconds between each speed step
+
 // ================================================================================
 /// Configure the hardware once after booting up.  This runs once after pressing
 //// reset or powering up the board.
@@ -111,7 +113,6 @@ void loop(void)
   set_motor_current(startSpeed);
 
   //Accelerate the motor
-  int delayTime = 10; //milliseconds between each speed step
   Serial.println("Start acceleration");
   for (int i = startSpeed + 1; i <= maxSpeed; i++)
   {
