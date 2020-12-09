@@ -1,11 +1,3 @@
-// This program assumes that:
-//
-//  1. A DRV8833 DC motor driver module is connected to pins 5, 6.
-//  2. A motor is attached to the driver.
-//  3. The serial console on the Arduino IDE is set to 9600 baud communications speed.
-
-// ================================================================================
-// Define the pin numbers on which the outputs are generated.
 #define MOT_A1_PIN 5
 #define MOT_A2_PIN 6
 
@@ -14,15 +6,12 @@ int switchState = 0;      // variable for reading the switch's status
 
 const int startSpeed = 180; // startspeed of the motor
 const int maxSpeed = 255; // maxspeed of the motor
-const int runTime = 1; // time to run at max speed
+const int runTime = 1; // time to run at max speed in seconds
 
 const int stopTime = 5000; // wait 5000 ms between runs
 
 const int delayTime = 10; // milliseconds between each speed step
 
-// ================================================================================
-/// Configure the hardware once after booting up.  This runs once after pressing
-//// reset or powering up the board.
 void setup(void)
 {
   // Initialize the stepper driver control pins to output drive mode.
@@ -37,40 +26,27 @@ void setup(void)
   Serial.begin(9600);
 }
 
-// ================================================================================
-/// Set the current on a motor channel using PWM and directional logic.
-/// Changing the current will affect the motor speed, but please note this is
-/// not a calibrated speed control.  This function will configure the pin output
-/// state and return.
-///
-/// \param pwm    PWM duty cycle ranging from -255 full reverse to 255 full forward
-/// \param IN1_PIN  pin number xIN1 for the given channel
-/// \param IN2_PIN  pin number xIN2 for the given channel
-void set_motor_pwm(int pwm, int IN1_PIN, int IN2_PIN)
+void runForward(int pwm)
 {
-  if (pwm < 0)
-  { // reverse speeds
-    analogWrite(IN1_PIN, -pwm);
-    digitalWrite(IN2_PIN, LOW);
-  }
-  else
-  { // stop or forward
-    digitalWrite(IN1_PIN, LOW);
-    analogWrite(IN2_PIN, pwm);
-  }
+  analogWrite(MOT_A1_PIN, pwm);
+  digitalWrite(MOT_A2_PIN, LOW);
+  Serial.println("run forward at " + pwm);
 }
 
-// ================================================================================
-/// Set the current on both motors.
-///
-/// \param pwm motor  PWM, -255 to 255
-void set_motor_current(int pwm)
+void runReverse(int pwm)
 {
-  set_motor_pwm(pwm, MOT_A1_PIN, MOT_A2_PIN);
-
-  // Print a status message to the console.
-  Serial.println("Set motor A PWM = " + pwm);
+  digitalWrite(MOT_A1_PIN, LOW);
+  analogWrite(MOT_A2_PIN, pwm);
+  Serial.println("run in reverse at " + pwm);
 }
+
+void stopMotor(void)
+{
+  digitalWrite(MOT_A1_PIN, HIGH);
+  digitalWrite(MOT_A2_PIN, HIGH);
+  Serial.println("stop motor");
+}
+
 
 bool offButtonPressed()
 {
@@ -78,8 +54,7 @@ bool offButtonPressed()
   if (switchState == LOW)
   {
     Serial.println("turn off");
-    digitalWrite(MOT_A1_PIN, LOW);
-    digitalWrite(MOT_A2_PIN, LOW);
+    stopMotor();
     return true;
   }
   return false;
@@ -98,9 +73,6 @@ bool run(int seconds)
   return true;
 }
 
-// ================================================================================
-/// Run one iteration of the main event loop.  The Arduino system will call this
-/// function over and over forever.
 void loop(void)
 {
   Serial.println("Start");
@@ -109,11 +81,10 @@ void loop(void)
     return;
   }
 
-  //Accelerate the motor
   Serial.println("Start acceleration");
   for (int i = startSpeed; i <= maxSpeed; i++)
   {
-    set_motor_current(i);
+    runForward(i);
     delay(delayTime);
   }
 
@@ -125,40 +96,41 @@ void loop(void)
   }
 
   // Decelerate the motor and stop
-  for (int i = maxSpeed; i >= 0; i--)
+  for (int i = maxSpeed - 1; i >= 0; i--)
   {
-    set_motor_current(i);
+    runForward(i);
   }
+
+  stopMotor();
   Serial.println("stop for stopTime seconds");
   delay(stopTime);
   if (offButtonPressed())
   {
     return;
   }
-
-  //Run in reverse
+  
   //Accelerate the motor
   Serial.println("Start acceleration");
   for (int i = -startSpeed; i >= -maxSpeed; i--)
   {
-    set_motor_current(i);
+    runReverse(i);
     delay(delayTime);
   }
 
   // Full speed reverse.
-  Serial.println("run at max speed for runTime seconds");
+  Serial.println("run in reverse at max speed for runTime seconds");
   if (!run(runTime))
   {
     return;
   }
   
    // Decelerate the motor and stop
-  for (int i = -maxSpeed; i <= 0; i++)
+  for (int i = -maxSpeed + 1; i <= 0; i++)
   {
-    set_motor_current(i);
+    runReverse(i);
   }
 
   Serial.println("stop for stopTime seconds");
-  set_motor_current(0);
+  stopMotor();
   delay(stopTime);
 }
