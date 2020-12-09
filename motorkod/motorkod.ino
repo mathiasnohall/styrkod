@@ -69,8 +69,7 @@ void set_motor_current(int pwm)
   set_motor_pwm(pwm, MOT_A1_PIN, MOT_A2_PIN);
 
   // Print a status message to the console.
-  Serial.print("Set motor A PWM = ");
-  Serial.print(pwm);
+  Serial.println("Set motor A PWM = " + pwm);
 }
 
 bool offButtonPressed()
