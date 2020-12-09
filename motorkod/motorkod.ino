@@ -109,11 +109,9 @@ void loop(void)
     return;
   }
 
-  set_motor_current(startSpeed);
-
   //Accelerate the motor
   Serial.println("Start acceleration");
-  for (int i = startSpeed + 1; i <= maxSpeed; i++)
+  for (int i = startSpeed; i <= maxSpeed; i++)
   {
     set_motor_current(i);
     delay(delayTime);
@@ -138,12 +136,10 @@ void loop(void)
     return;
   }
 
-  // run in reverse
-  set_motor_current(-startSpeed);
-
+  //Run in reverse
   //Accelerate the motor
   Serial.println("Start acceleration");
-  for (int i = -startSpeed - 1; i >= -maxSpeed; i--)
+  for (int i = -startSpeed; i >= -maxSpeed; i--)
   {
     set_motor_current(i);
     delay(delayTime);
