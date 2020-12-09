@@ -125,7 +125,7 @@ void loop(void)
   }
 
   // Decelerate the motor and stop
-  for (int i = maxSpeed; i <= 0; i--)
+  for (int i = maxSpeed; i >= 0; i--)
   {
     set_motor_current(i);
   }
@@ -153,7 +153,7 @@ void loop(void)
   }
   
    // Decelerate the motor and stop
-  for (int i = -maxSpeed; i >= 0; i++)
+  for (int i = -maxSpeed; i <= 0; i++)
   {
     set_motor_current(i);
   }
