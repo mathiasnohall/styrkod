@@ -81,12 +81,7 @@ void loop(void)
     return;
   }
 
-  Serial.println("Start acceleration");
-  for (int i = startSpeed; i <= maxSpeed; i++)
-  {
-    runForward(i);
-    delay(delayTime);
-  }
+  runForward(maxSpeed);
 
   // Full speed forward.
   Serial.println("run at max speed for runTime seconds");
@@ -95,13 +90,6 @@ void loop(void)
     return;
   }
 
-  // Decelerate the motor and stop
-  for (int i = maxSpeed - 1; i >= 0; i--)
-  {
-    runForward(i);
-  }
-
-
   stopMotor();
   Serial.println("stop for stopTime seconds");
   delay(stopTime);
@@ -109,24 +97,14 @@ void loop(void)
   {
     return;
   }
-  
-  for (int i = startSpeed; i <= maxSpeed; i++)
-  {
-    runReverse(i);
-    delay(delayTime);
-  }
+
+  runReverse(maxSpeed);
 
   // Full speed reverse.
   Serial.println("run reverse at max speed for runTime seconds");
   if (!run(runTime))
   {
     return;
-  }
-
-  // Decelerate the motor and stop
-  for (int i = maxSpeed - 1; i >= 0; i--)
-  {
-    runReverse(i);
   }
 
   Serial.println("stop for stopTime seconds");
