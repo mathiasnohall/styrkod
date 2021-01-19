@@ -4,11 +4,11 @@
 const int switchPin = 13; // the number of the switch pin
 int switchState = 0;      // variable for reading the switch's status
 
-const int startSpeed = 180; // startspeed of the motor
+const int startSpeed = 155; // startspeed of the motor
 const int maxSpeed = 255; // maxspeed of the motor
-const int runTime = 1; // time to run at max speed in seconds
+const int runTime = 5; // time to run at max speed in seconds
 
-const int stopTime = 5000; // wait 5000 ms between runs
+const int stopTime = 5; // wait 5 seconds between runs
 
 const int delayTime = 10; // milliseconds between each speed step
 
@@ -30,14 +30,12 @@ void runForward(int pwm)
 {
   analogWrite(MOT_A1_PIN, pwm);
   digitalWrite(MOT_A2_PIN, LOW);
-  Serial.println("run forward at " + pwm);
 }
 
 void runReverse(int pwm)
 {
   digitalWrite(MOT_A1_PIN, LOW);
   analogWrite(MOT_A2_PIN, pwm);
-  Serial.println("run in reverse at " + pwm);
 }
 
 void stopMotor(void)
@@ -62,74 +60,73 @@ bool offButtonPressed()
 
 bool run(int seconds)
 {
+  Serial.println("run");   
   for (int i = 0; i < seconds; i++)
   {
     if (offButtonPressed())
     {
       return false; // do not run any more
     }
-    delay(1000);    
+    delay(1000);
+    Serial.println(i);    
+  }
+  return true;
+}
+
+bool wait(int seconds)
+{
+  Serial.println("wait");   
+  for (int i = 0; i < seconds; i++)
+  {
+    if (offButtonPressed())
+    {
+      return false; // do not run any more
+    }
+    delay(1000);
+    Serial.println(i);    
   }
   return true;
 }
 
 void loop(void)
 {
-  Serial.println("Start");
-  if (offButtonPressed())
-  {
-    return;
-  }
-
-  Serial.println("Start acceleration");
-  for (int i = startSpeed; i <= maxSpeed; i++)
-  {
-    runForward(i);
-    delay(delayTime);
-  }
-
-  // Full speed forward.
-  Serial.println("run at max speed for runTime seconds");
-  if (!run(runTime))
-  {
-    return;
-  }
-
-  // Decelerate the motor and stop
-  for (int i = maxSpeed - 1; i >= 0; i--)
-  {
-    runForward(i);
-  }
-
-
   stopMotor();
-  Serial.println("stop for stopTime seconds");
-  delay(stopTime);
   if (offButtonPressed())
   {
     return;
   }
   
+  Serial.println("accelerate forward");
   for (int i = startSpeed; i <= maxSpeed; i++)
   {
-    runReverse(i);
-    delay(delayTime);
+    runForward(i);
+    delay(20);
   }
-
-  // Full speed reverse.
-  Serial.println("run reverse at max speed for runTime seconds");
-  if (!run(runTime))
+  Serial.println("run forward");
+  runForward(maxSpeed);
+  run(runTime);
+  
+    
+  Serial.println("stop");
+  stopMotor();
+  wait(stopTime);  
+  if (offButtonPressed())
   {
     return;
   }
 
-  // Decelerate the motor and stop
-  for (int i = maxSpeed - 1; i >= 0; i--)
+  Serial.println("accelerate reverse");
+  for (int i = startSpeed; i <= maxSpeed; i++)
   {
     runReverse(i);
+    delay(20);
   }
+  Serial.println("run reverse");  
+  runReverse(maxSpeed);
+  run(runTime);
 
-  Serial.println("stop for stopTime seconds");
+  
+  Serial.println("stop");
   stopMotor();
-  delay(stopTime);
+  wait(stopTime);
 }
