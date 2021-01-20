@@ -59,11 +59,7 @@ bool offButtonPressed()
 bool run(int seconds)
 {  
   for (int i = 0; i < seconds; i++)
-  {
-    if (offButtonPressed())
-    {
-      return false; // do not run any more
-    }
+  {   
     delay(1000);
   }
   return true;
@@ -72,11 +68,7 @@ bool run(int seconds)
 bool wait(int seconds)
 {
   for (int i = 0; i < seconds; i++)
-  {
-    if (offButtonPressed())
-    {
-      return false; // do not run any more
-    }
+  {   
     delay(1000);   
   }
   return true;
@@ -85,26 +77,16 @@ bool wait(int seconds)
 void loop(void)
 {
   stopMotor();
-  if (offButtonPressed())
-  {
-    return;
-  }
-  
+
   for (int i = startSpeed; i <= maxSpeed; i++)
   {
     runForward(i);
     delay(20);
   }
   runForward(maxSpeed);
-  run(runTime);
-  
+  run(runTime);  
     
   stopMotor();
-  wait(stopTime);  
-  if (offButtonPressed())
-  {
-    return;
-  }
 
   for (int i = startSpeed; i <= maxSpeed; i++)
   {
