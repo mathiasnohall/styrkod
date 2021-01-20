@@ -8,7 +8,7 @@ const int startSpeed = 155; // startspeed of the motor
 const int maxSpeed = 255; // maxspeed of the motor
 const int runTime = 1; // time to run at max speed in seconds
 
-const int stopTime = 5; // wait 5 seconds between runs
+const int stopTime = 1; // wait 5 seconds between runs
 
 const int delayTime = 10; // milliseconds between each speed step
 
@@ -42,7 +42,6 @@ void stopMotor(void)
 {
   digitalWrite(MOT_A1_PIN, HIGH);
   digitalWrite(MOT_A2_PIN, HIGH);
-  Serial.println("stop motor");
 }
 
 
@@ -51,7 +50,6 @@ bool offButtonPressed()
   switchState = digitalRead(switchPin); // read the state of the switch value:
   if (switchState == LOW)
   {
-    Serial.println("turn off");
     stopMotor();
     return true;
   }
@@ -59,8 +57,7 @@ bool offButtonPressed()
 }
 
 bool run(int seconds)
-{
-  Serial.println("run");   
+{  
   for (int i = 0; i < seconds; i++)
   {
     if (offButtonPressed())
@@ -68,22 +65,19 @@ bool run(int seconds)
       return false; // do not run any more
     }
     delay(1000);
-    Serial.println(i);    
   }
   return true;
 }
 
 bool wait(int seconds)
 {
-  Serial.println("wait");   
   for (int i = 0; i < seconds; i++)
   {
     if (offButtonPressed())
     {
       return false; // do not run any more
     }
-    delay(1000);
-    Serial.println(i);    
+    delay(1000);   
   }
   return true;
 }
@@ -96,18 +90,15 @@ void loop(void)
     return;
   }
   
-  Serial.println("accelerate forward");
   for (int i = startSpeed; i <= maxSpeed; i++)
   {
     runForward(i);
     delay(20);
   }
-  Serial.println("run forward");
   runForward(maxSpeed);
   run(runTime);
   
     
-  Serial.println("stop");
   stopMotor();
   wait(stopTime);  
   if (offButtonPressed())
@@ -115,18 +106,15 @@ void loop(void)
     return;
   }
 
-  Serial.println("accelerate reverse");
   for (int i = startSpeed; i <= maxSpeed; i++)
   {
     runReverse(i);
     delay(20);
   }
-  Serial.println("run reverse");  
   runReverse(maxSpeed);
   run(runTime);
 
   
-  Serial.println("stop");
   stopMotor();
   wait(stopTime);
 }
