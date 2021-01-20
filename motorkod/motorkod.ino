@@ -6,7 +6,7 @@ int switchState = 0;      // variable for reading the switch's status
 
 const int startSpeed = 155; // startspeed of the motor
 const int maxSpeed = 255; // maxspeed of the motor
-const int runTime = 5; // time to run at max speed in seconds
+const int runTime = 1; // time to run at max speed in seconds
 
 const int stopTime = 5; // wait 5 seconds between runs
 
