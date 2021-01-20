@@ -6,9 +6,9 @@ int switchState = 0;      // variable for reading the switch's status
 
 const int startSpeed = 155; // startspeed of the motor
 const int maxSpeed = 255; // maxspeed of the motor
-const int runTime = 1; // time to run at max speed in seconds
+const int runTime = 2; // time to run at max speed in seconds
 
-const int stopTime = 1; // wait 5 seconds between runs
+const int stopTime = 2; // wait 5 seconds between runs
 
 const int delayTime = 10; // milliseconds between each speed step
 
@@ -90,14 +90,8 @@ void loop(void)
     return;
   }
   
-  for (int i = startSpeed; i <= maxSpeed; i++)
-  {
-    runForward(i);
-    delay(20);
-  }
   runForward(maxSpeed);
-  run(runTime);
-  
+  run(runTime);  
     
   stopMotor();
   wait(stopTime);  
@@ -106,11 +100,6 @@ void loop(void)
     return;
   }
 
-  for (int i = startSpeed; i <= maxSpeed; i++)
-  {
-    runReverse(i);
-    delay(20);
-  }
   runReverse(maxSpeed);
   run(runTime);
 
