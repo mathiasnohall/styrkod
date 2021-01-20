@@ -86,7 +86,8 @@ void loop(void)
   runForward(maxSpeed);
   run(runTime);  
     
-  stopMotor();
+  stopMotor();  
+  wait(stopTime);
 
   for (int i = startSpeed; i <= maxSpeed; i++)
   {
