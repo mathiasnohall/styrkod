@@ -78,25 +78,14 @@ void loop(void)
 {
   stopMotor();
 
-  for (int i = startSpeed; i <= maxSpeed; i++)
-  {
-    runForward(i);
-    delay(20);
-  }
   runForward(maxSpeed);
   run(runTime);  
     
   stopMotor();  
   wait(stopTime);
 
-  for (int i = startSpeed; i <= maxSpeed; i++)
-  {
-    runReverse(i);
-    delay(20);
-  }
   runReverse(maxSpeed);
   run(runTime);
-
   
   stopMotor();
   wait(stopTime);
