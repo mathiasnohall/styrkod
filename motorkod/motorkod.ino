@@ -4,6 +4,9 @@
 const int switchPin = 13; // the number of the switch pin
 int switchState = 0;      // variable for reading the switch's status
 
+const int sensorPin = 2; // the rotation sensor pin
+int rotations = 0;
+
 const int startSpeed = 155; // startspeed of the motor
 const int maxSpeed = 255; // maxspeed of the motor
 const int runTime = 2; // time to run at max speed in seconds
@@ -42,6 +45,7 @@ void stopMotor(void)
 {
   digitalWrite(MOT_A1_PIN, HIGH);
   digitalWrite(MOT_A2_PIN, HIGH);
+  rotations = 0;
 }
 
 
@@ -64,6 +68,10 @@ bool run(int seconds)
     {
       return false; // do not run any more
     }
+    for(int y = 0; y < 10000; y++){
+      rotations += analogRead(sensorPin);
+    }
+    Serial.println(rotations);
     delay(1000);
   }
   return true;
