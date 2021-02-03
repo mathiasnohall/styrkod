@@ -92,26 +92,12 @@ bool wait(int seconds)
 
 void loop(void)
 {
-  stopMotor();
-  if (offButtonPressed())
-  {
-    return;
-  }
-  
-  runForward(maxSpeed);
-  run(runTime);  
-    
-  stopMotor();
-  wait(stopTime);  
   if (offButtonPressed())
   {
     return;
   }
 
-  runReverse(maxSpeed);
-  run(runTime);
-
-  
-  stopMotor();
-  wait(stopTime);
+  rotations += digitalRead(sensorPin);
+  Serial.println(rotations);
+ 
 }
