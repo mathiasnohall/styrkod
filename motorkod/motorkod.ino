@@ -92,12 +92,9 @@ bool wait(int seconds)
 
 void loop(void)
 {
-  if (offButtonPressed())
-  {
-    return;
-  }
-
-  rotations += digitalRead(sensorPin);
-  Serial.println(rotations);
- 
+  int sensorState = digitalRead(sensorPin);
+   if (sensorState == LOW){
+     rotations++;
+   }
+  Serial.println(rotations); 
 }
