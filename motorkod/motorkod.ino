@@ -5,11 +5,11 @@ const int switchPin = 13; // the number of the switch pin
 int switchState = 0;      // variable for reading the switch's status
 
 const int sensorPin = 2; // the rotation sensor pin
+const int maxRotations = 2;
 int rotations = 0;
 
 const int startSpeed = 155; // startspeed of the motor
 const int maxSpeed = 255; // maxspeed of the motor
-const int runTime = 2; // time to run at max speed in seconds
 
 const int stopTime = 2; // wait 5 seconds between runs
 
@@ -20,6 +20,7 @@ void setup(void)
   // Initialize the stepper driver control pins to output drive mode.
   pinMode(MOT_A1_PIN, OUTPUT);
   pinMode(MOT_A2_PIN, OUTPUT);
+  pinMode(sensorPin, INPUT);
 
   // Start with drivers off, motors coasting.
   digitalWrite(MOT_A1_PIN, LOW);
@@ -60,41 +61,59 @@ bool offButtonPressed()
   return false;
 }
 
-bool run(int seconds)
+void run()
 {  
-  for (int i = 0; i < seconds; i++)
-  {
-    if (offButtonPressed())
-    {
-      return false; // do not run any more
+  bool on_state = false;
+  while(true){    
+    if (digitalRead(sensorPin)==LOW){
+      if (on_state==false){
+        on_state = true;
+        rotations++;
+      }
+    } else{
+      on_state = false;
     }
-    for(int y = 0; y < 10000; y++){
-      rotations += analogRead(sensorPin);
+    
+    if (rotations>=maxRotations){
+      Serial.println(rotations);
+      rotations = 0;
+      break;
     }
-    Serial.println(rotations);
-    delay(1000);
-  }
-  return true;
+  }  
 }
 
-bool wait(int seconds)
+void wait(int seconds)
 {
-  for (int i = 0; i < seconds; i++)
-  {
-    if (offButtonPressed())
-    {
-      return false; // do not run any more
-    }
-    delay(1000);   
-  }
-  return true;
+  delay(seconds * 1000);    
 }
 
 void loop(void)
 {
-  int sensorState = digitalRead(sensorPin);
-   if (sensorState == LOW){
-     rotations++;
-   }
-  Serial.println(rotations); 
+  Serial.println("start");
+  
+  stopMotor();
+  if (offButtonPressed())
+  {
+    return;
+  }
+  
+  runForward(maxSpeed);
+  run();
+    
+  stopMotor();
+  if (offButtonPressed())
+  {
+    return;
+  }
+  wait(stopTime);  
+  if (offButtonPressed())
+  {
+    return;
+  }
+
+  runReverse(maxSpeed);
+  run();
+  
+  stopMotor();
+  wait(stopTime);
 }
