@@ -79,6 +79,10 @@ void run()
       rotations = 0;
       break;
     }
+    
+    if (offButtonPressed()){
+      break;
+    }
   }  
 }
 
