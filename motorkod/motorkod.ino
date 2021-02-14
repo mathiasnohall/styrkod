@@ -8,12 +8,9 @@ const int sensorPin = 2; // the rotation sensor pin
 const int maxRotations = 2;
 int rotations = 0;
 
-const int startSpeed = 155; // startspeed of the motor
 const int maxSpeed = 255; // maxspeed of the motor
 
 const int stopTime = 2; // wait 5 seconds between runs
-
-const int delayTime = 10; // milliseconds between each speed step
 
 void setup(void)
 {
@@ -76,7 +73,6 @@ void run()
     
     if (rotations>=maxRotations){
       Serial.println(rotations);
-      rotations = 0;
       break;
     }
     
