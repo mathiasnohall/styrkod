@@ -43,7 +43,6 @@ void stopMotor(void)
 {
   digitalWrite(MOT_A1_PIN, HIGH);
   digitalWrite(MOT_A2_PIN, HIGH);
-  rotations = maxRotations - rotations;
 }
 
 
@@ -53,6 +52,7 @@ bool offButtonPressed()
   if (switchState == LOW)
   {
     stopMotor();
+    rotations = 0;
     return true;
   }
   return false;
@@ -90,7 +90,7 @@ void wait(int seconds)
 void loop(void)
 {
   Serial.println("start");
-  
+  rotations = 0;
   stopMotor();
   if (offButtonPressed())
   {
@@ -101,6 +101,7 @@ void loop(void)
   run();
     
   stopMotor();
+  rotations = maxRotations - rotations;
   if (offButtonPressed())
   {
     return;
@@ -115,5 +116,6 @@ void loop(void)
   run();
   
   stopMotor();
+  rotations = maxRotations - rotations;
   wait(stopTime);
 }
