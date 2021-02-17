@@ -43,7 +43,7 @@ void stopMotor(void)
 {
   digitalWrite(MOT_A1_PIN, HIGH);
   digitalWrite(MOT_A2_PIN, HIGH);
-  rotations = 0;
+  rotations = maxRotations - rotations;
 }
 
 
