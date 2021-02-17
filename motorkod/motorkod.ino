@@ -5,7 +5,7 @@ const int switchPin = 13; // the number of the switch pin
 int switchState = 0;      // variable for reading the switch's status
 
 const int sensorPin = 2; // the rotation sensor pin
-const int maxRotations = 2;
+const int maxRotations = 50;
 int rotations = 0;
 
 const int maxSpeed = 255; // maxspeed of the motor
