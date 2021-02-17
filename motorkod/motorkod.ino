@@ -84,13 +84,12 @@ void run()
 
 void wait(int seconds)
 {
-  delay(seconds * 1000);    
+  delay(seconds * 1000);
 }
 
 void loop(void)
 {
   Serial.println("start");
-  rotations = 0;
   stopMotor();
   if (offButtonPressed())
   {
