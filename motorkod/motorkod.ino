@@ -47,7 +47,7 @@ void stopMotor(void)
 }
 
 
-void checkOffButtonPressed()
+bool checkOffButtonPressed()
 {
   switchState = digitalRead(switchPin); // read the state of the switch value:
   if (switchState == LOW)
@@ -125,7 +125,9 @@ void decelerateReverse()
 
 void loop(void)
 {
-  wait();
+  if(checkOffButtonPressed()){
+    return
+  }
 
   Serial.println("start");
   accelerateForward();
@@ -133,6 +135,10 @@ void loop(void)
   decelerateForward();
     
   wait();
+  
+  if(checkOffButtonPressed()){
+    return
+  }
 
   accelerateReverse();
   run();  
