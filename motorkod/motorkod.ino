@@ -9,7 +9,7 @@ const int maxRotations = 10;
 int rotations = 0;
 
 const int maxSpeed = 255; // maxspeed of the motor
-const int startSpeed = 55; // startspeed of the motor
+const int startSpeed = 105; // startspeed of the motor
 
 const int stopTime = 2000; // wait stopTime miliseconds between runs
 
