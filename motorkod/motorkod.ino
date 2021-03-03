@@ -126,7 +126,7 @@ void decelerateReverse()
 void loop(void)
 {
   if(checkOffButtonPressed()){
-    return
+    return;
   }
 
   Serial.println("start");
@@ -137,7 +137,7 @@ void loop(void)
   wait();
   
   if(checkOffButtonPressed()){
-    return
+    return;
   }
 
   accelerateReverse();
