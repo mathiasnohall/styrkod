@@ -77,7 +77,7 @@ void run()
       break;
     }
     
-    if(checkOffButtonPressed(){
+    if(checkOffButtonPressed()){
       break;
     }
   }  
