@@ -53,8 +53,7 @@ void checkOffButtonPressed()
   if (switchState == LOW)
   {
     stopMotor();
-    rotations = 0;
-    goto start;
+    rotations = 0;   
   }
 }
 
@@ -126,7 +125,6 @@ void decelerateReverse()
 
 void loop(void)
 {
-  start:  
   wait();
 
   Serial.println("start");
