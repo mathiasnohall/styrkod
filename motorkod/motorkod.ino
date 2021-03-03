@@ -5,7 +5,7 @@ const int switchPin = 13; // the number of the switch pin
 int switchState = 0;      // variable for reading the switch's status
 
 const int sensorPin = 2; // the rotation sensor pin
-const int maxRotations = 5;
+const int maxRotations = 1;
 int rotations = 0;
 
 const int maxSpeed = 255; // maxspeed of the motor
@@ -53,8 +53,10 @@ bool checkOffButtonPressed()
   if (switchState == LOW)
   {
     stopMotor();
-    rotations = 0;   
+    rotations = 0;
+    return true;   
   }
+  return false;
 }
 
 void run()
@@ -75,7 +77,9 @@ void run()
       break;
     }
     
-    checkOffButtonPressed();
+    if(checkOffButtonPressed(){
+      break;
+    }
   }  
 }
 
