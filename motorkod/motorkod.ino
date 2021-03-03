@@ -93,7 +93,7 @@ void wait()
 
 void accelerateForward()
 {
-  for(int i = startSpeed; i <= maxSpeed; i + 20)
+  for(int i = startSpeed; i <= maxSpeed; i += 20)
   {
     runForward(i);
     delay(100);
@@ -102,7 +102,7 @@ void accelerateForward()
 
 void decelerateForward()
 {
-  for(int i = maxSpeed - 20; i >= startSpeed; i - 20)
+  for(int i = maxSpeed - 20; i >= startSpeed; i -= 20)
   {
     runForward(i);
     delay(100);
@@ -111,7 +111,7 @@ void decelerateForward()
 
 void accelerateReverse()
 {
-  for(int i = startSpeed; i <= maxSpeed; i + 20)
+  for(int i = startSpeed; i <= maxSpeed; i += 20)
   {
     runReverse(i);
     delay(100);
@@ -120,7 +120,7 @@ void accelerateReverse()
 
 void decelerateReverse()
 {
-  for(int i = maxSpeed - 20; i >= startSpeed; i - 20)
+  for(int i = maxSpeed - 20; i >= startSpeed; i -= 20)
   {
     runReverse(i);
     delay(100);
