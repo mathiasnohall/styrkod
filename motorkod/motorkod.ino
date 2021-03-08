@@ -9,8 +9,9 @@ const int maxRotations = 50;
 int rotations = 0;
 
 const int maxSpeed = 255; // maxspeed of the motor
+const int startSpeed = 125; // startspeed of the motor
 
-const int stopTime = 2; // wait 5 seconds between runs
+const int stopTime = 2000; // wait stopTime miliseconds between runs
 
 void setup(void)
 {
@@ -46,14 +47,14 @@ void stopMotor(void)
 }
 
 
-bool offButtonPressed()
+bool checkOffButtonPressed()
 {
   switchState = digitalRead(switchPin); // read the state of the switch value:
   if (switchState == LOW)
   {
     stopMotor();
     rotations = 0;
-    return true;
+    return true;   
   }
   return false;
 }
@@ -76,45 +77,76 @@ void run()
       break;
     }
     
-    if (offButtonPressed()){
+    if(checkOffButtonPressed()){
       break;
     }
   }  
 }
 
-void wait(int seconds)
+void wait()
 {
-  delay(seconds * 1000);
+  rotations = 0;
+  stopMotor();
+  delay(stopTime);
+  checkOffButtonPressed();
+}
+
+void accelerateForward()
+{
+  for(int i = startSpeed; i <= maxSpeed; i += 20)
+  {
+    runForward(i);
+    delay(100);
+  }
+}
+
+void decelerateForward()
+{
+  for(int i = maxSpeed - 20; i >= startSpeed; i -= 20)
+  {
+    runForward(i);
+    delay(100);
+  }
+}
+
+void accelerateReverse()
+{
+  for(int i = startSpeed; i <= maxSpeed; i += 20)
+  {
+    runReverse(i);
+    delay(100);
+  }
+}
+
+void decelerateReverse()
+{
+  for(int i = maxSpeed - 20; i >= startSpeed; i -= 20)
+  {
+    runReverse(i);
+    delay(100);
+  }
 }
 
 void loop(void)
 {
-  Serial.println("start");
-  stopMotor();
-  if (offButtonPressed())
-  {
-    return;
-  }
-  
-  runForward(maxSpeed);
-  run();
-    
-  stopMotor();
-  rotations = maxRotations - rotations;
-  if (offButtonPressed())
-  {
-    return;
-  }
-  wait(stopTime);  
-  if (offButtonPressed())
-  {
+  if(checkOffButtonPressed()){
     return;
   }
 
-  runReverse(maxSpeed);
+  Serial.println("start");
+  accelerateForward();
   run();
+  decelerateForward();
+    
+  wait();
   
-  stopMotor();
-  rotations = maxRotations - rotations;
-  wait(stopTime);
+  if(checkOffButtonPressed()){
+    return;
+  }
+
+  accelerateReverse();
+  run();  
+  decelerateReverse();
+  
+  wait();
 }
