@@ -73,7 +73,6 @@ void run()
     }
     
     if (rotations>=maxRotations){
-      Serial.println(rotations);
       break;
     }
     
@@ -83,12 +82,30 @@ void run()
   }  
 }
 
+void countRotations(){
+  unsigned long start = milis();
+  bool running = true;
+  bool on_state = false;
+
+  while(running){
+    if (digitalRead(sensorPin)==LOW){
+      if (on_state==false){
+        on_state = true;
+        rotations++;
+      }
+    } else{
+      on_state = false;
+    }
+    if (running && ((millis() - start) >= 100)){
+      running = false;
+    }
+  }
+}
+
 void wait()
 {
-  rotations = 0;
   stopMotor();
   delay(stopTime);
-  checkOffButtonPressed();
 }
 
 void accelerateForward()
@@ -96,7 +113,7 @@ void accelerateForward()
   for(int i = startSpeed; i <= maxSpeed; i += 20)
   {
     runForward(i);
-    delay(100);
+    countRotations();
   }
 }
 
@@ -105,7 +122,7 @@ void decelerateForward()
   for(int i = maxSpeed - 20; i >= startSpeed; i -= 20)
   {
     runForward(i);
-    delay(100);
+    countRotations();
   }
 }
 
@@ -114,7 +131,7 @@ void accelerateReverse()
   for(int i = startSpeed; i <= maxSpeed; i += 20)
   {
     runReverse(i);
-    delay(100);
+    countRotations();
   }
 }
 
@@ -123,21 +140,22 @@ void decelerateReverse()
   for(int i = maxSpeed - 20; i >= startSpeed; i -= 20)
   {
     runReverse(i);
-    delay(100);
+    countRotations();
   }
 }
 
 void loop(void)
 {
+  wait();
   if(checkOffButtonPressed()){
     return;
   }
 
-  Serial.println("start");
   accelerateForward();
   run();
   decelerateForward();
     
+  rotations = maxRotations - rotations;
   wait();
   
   if(checkOffButtonPressed()){
@@ -148,5 +166,6 @@ void loop(void)
   run();  
   decelerateReverse();
   
+  rotations = maxRotations - rotations;
   wait();
 }
